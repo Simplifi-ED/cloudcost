@@ -29,14 +29,14 @@ type Response struct {
 }
 
 func main() {
-	vmType := flag.String("t", "", "VM type")
-	region := flag.String("r", "", "Region")
+	vmType := flag.String("t", "Standard_B4ms", "VM type")
+	region := flag.String("r", "westus", "Region")
 	pricingPeriod := flag.String("p", "", "Pricing period (hour or month)")
-	series := flag.String("s", "", "VM series (e.g., 'D' for D series)")
-	flag.StringVar(series, "series", "", "VM series (e.g., 'D' for D series)")
-	flag.StringVar(vmType, "type", "", "VM type")
-	flag.StringVar(region, "region", "", "Region")
-	flag.StringVar(pricingPeriod, "pricing", "", "Pricing period (hour or month)")
+	series := flag.String("s", "", "Azure service (e.g., 'D' for D series vms, Private for Private links)")
+	flag.StringVar(series, "service", "", "Azure service (e.g., 'D' for D series vms, Private for Private links)")
+	flag.StringVar(vmType, "type", "Standard_B4ms", "VM type")
+	flag.StringVar(region, "region", "westus", "Region")
+	flag.StringVar(pricingPeriod, "period", "", "Pricing period (hour or month)")
 	flag.Parse()
 
 	re := lipgloss.NewRenderer(os.Stdout)
