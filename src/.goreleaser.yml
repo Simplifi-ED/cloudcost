@@ -1,6 +1,6 @@
 builds:
 - binary: azureprice
-  main: ./cmd
+  main: ./
   goos:
   - darwin
   - linux
