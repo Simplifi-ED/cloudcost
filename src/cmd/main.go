@@ -31,12 +31,14 @@ type Response struct {
 func main() {
 	vmType := flag.String("t", "Standard_B4ms", "VM type")
 	region := flag.String("r", "westus", "Region")
-	pricingPeriod := flag.String("p", "", "Pricing period (hour or month)")
-	series := flag.String("s", "", "Azure service (e.g., 'D' for D series vms, Private for Private links)")
-	flag.StringVar(series, "service", "", "Azure service (e.g., 'D' for D series vms, Private for Private links)")
+	service := flag.String("s", "", "Azure service (e.g., 'D' for D series vms, Private for Private links)")
+	pricingType := flag.String("p", "Consumption", "Pricing Type (e.g., 'Consumption' or 'Reservation')")
+	currency := flag.String("c", "USD", "Price Currency (e.g., 'USD' or 'EUR')")
+	flag.StringVar(service, "service", "", "Azure service (e.g., 'D' for D series vms, Private for Private links)")
 	flag.StringVar(vmType, "type", "Standard_B4ms", "VM type")
 	flag.StringVar(region, "region", "westus", "Region")
-	flag.StringVar(pricingPeriod, "period", "", "Pricing period (hour or month)")
+	flag.StringVar(pricingType, "pricing-type", "Consumption", "Pricing Type (e.g., 'Consumption' or 'Reservation')")
+	flag.StringVar(currency, "currency", "USD", "Price Currency (e.g., 'USD' or 'EUR')")
 	flag.Parse()
 
 	re := lipgloss.NewRenderer(os.Stdout)
@@ -49,10 +51,10 @@ func main() {
 	}
 
 	var query string
-	if *series != "" {
-		query = fmt.Sprintf("armRegionName eq '%s' and contains(armSkuName, '%s') and priceType eq 'Consumption'", *region, *series)
+	if *service != "" {
+		query = fmt.Sprintf("armRegionName eq '%s' and contains(serviceName, '%s')", *region, *service)
 	} else if *vmType != "" {
-		query = fmt.Sprintf("armRegionName eq '%s' and armSkuName eq '%s' and priceType eq 'Consumption'", *region, *vmType)
+		query = fmt.Sprintf("armRegionName eq '%s' and contains(armSkuName, '%s') and priceType eq '%s'", *region, *vmType, *pricingType)
 	} else {
 		fmt.Println("Please provide either a series or type flag.")
 		return
@@ -60,10 +62,11 @@ func main() {
 
 	tableData := [][]string{{"SKU", "Retail Price", "Unit of Measure", "Region", "Meter", "Product Name"}}
 	apiURL := "https://prices.azure.com/api/retail/prices?"
+	currencyType := fmt.Sprintf("currencyCode='%s'", *currency)
 
 	for {
 		var resp Response
-		err := getJSON(apiURL+"&$filter="+url.QueryEscape(query), &resp)
+		err := getJSON(apiURL+currencyType+"&$filter="+url.QueryEscape(query), &resp)
 		if err != nil {
 			fmt.Println("Error:", err)
 			return
