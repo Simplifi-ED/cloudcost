@@ -1,31 +1,24 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
 	"net/url"
 	"os"
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
+	"github.com/muandane/azureprice/utils"
 	"github.com/spf13/cobra"
 )
 
-type Item struct {
-	ArmRegionName string  `json:"armRegionName"`
-	ArmSkuName    string  `json:"armSkuName"`
-	MeterName     string  `json:"meterName"`
-	ProductName   string  `json:"productName"`
-	RetailPrice   float64 `json:"retailPrice"`
-	UnitOfMeasure string  `json:"unitOfMeasure"`
-}
-
-type Response struct {
-	Items        []Item `json:"Items"`
-	NextPageLink string `json:"NextPageLink"`
+func init() {
+	rootCmd.Flags().StringVarP(&vmType, "type", "t", "", "VM type")
+	rootCmd.Flags().StringVarP(&region, "region", "r", "westus", "Region")
+	rootCmd.Flags().StringVarP(&service, "service", "s", "", "Azure service (e.g., 'D' for D series vms, Private for Private links)")
+	rootCmd.Flags().StringVarP(&pricingType, "pricing-type", "p", "Consumption", "Pricing Type (e.g., 'Consumption' or 'Reservation')")
+	rootCmd.Flags().StringVarP(&currency, "currency", "c", "USD", "Price Currency (e.g., 'USD' or 'EUR')")
+	rootCmd.AddCommand(versionCmd)
 }
 
 var vmType string
@@ -48,23 +41,16 @@ var rootCmd = &cobra.Command{
 			"Low":    lipgloss.AdaptiveColor{Light: "#EE9322", Dark: "#E9B824"},
 		}
 
-		var query string
-		if service != "" {
-			query = fmt.Sprintf("armRegionName eq '%s' and contains(serviceName, '%s')", region, service)
-		} else if vmType != "" {
-			query = fmt.Sprintf("armRegionName eq '%s' and contains(armSkuName, '%s') and priceType eq '%s'", region, vmType, pricingType)
-		} else {
-			fmt.Println("Please provide either a series or type flag.")
-			return
-		}
-
 		tableData := [][]string{{"SKU", "Retail Price", "Unit of Measure", "Monthly Price", "Region", "Meter", "Product Name"}}
 		apiURL := "https://prices.azure.com/api/retail/prices?"
 		currencyType := fmt.Sprintf("currencyCode='%s'", currency)
-
+		query := utils.Query(region, service, vmType, pricingType)
+		fmt.Println("Generated query:", query)
+		escapedQuery := url.QueryEscape(query)
+		fmt.Println("Escaped query:", escapedQuery)
 		for {
-			var resp Response
-			err := getJSON(apiURL+currencyType+"&$filter="+url.QueryEscape(query), &resp)
+			var resp utils.Response
+			err := utils.GetJSON(apiURL+currencyType+"&$filter="+escapedQuery, &resp)
 			if err != nil {
 				fmt.Println("Error:", err)
 				return
@@ -72,7 +58,7 @@ var rootCmd = &cobra.Command{
 
 			for _, item := range resp.Items {
 				var monthlyPrice string
-				if pricingType != "Reservation" {
+				if pricingType != "Reservation" && !strings.Contains(item.UnitOfMeasure, "GB") && !strings.Contains(item.UnitOfMeasure, "Month") {
 					monthlyPrice = fmt.Sprintf("%v", item.RetailPrice*730) // Calculate the monthly price
 				} else {
 					monthlyPrice = "---"
@@ -120,29 +106,6 @@ var rootCmd = &cobra.Command{
 			})
 		fmt.Println(t)
 	},
-}
-
-func init() {
-	rootCmd.Flags().StringVarP(&vmType, "type", "t", "Standard_B4ms", "VM type")
-	rootCmd.Flags().StringVarP(&region, "region", "r", "westus", "Region")
-	rootCmd.Flags().StringVarP(&service, "service", "s", "", "Azure service (e.g., 'D' for D series vms, Private for Private links)")
-	rootCmd.Flags().StringVarP(&pricingType, "pricing-type", "p", "Consumption", "Pricing Type (e.g., 'Consumption' or 'Reservation')")
-	rootCmd.Flags().StringVarP(&currency, "currency", "c", "USD", "Price Currency (e.g., 'USD' or 'EUR')")
-}
-
-func getJSON(url string, v interface{}) error {
-	resp, err := http.Get(url)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-
-	return json.Unmarshal(body, v)
 }
 
 func Execute() {
