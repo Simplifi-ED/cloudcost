@@ -1,5 +1,5 @@
 builds:
-- binary: azureprice
+- binary: cloudcost
   main: ./
   goos:
   - darwin
@@ -19,7 +19,7 @@ universal_binaries:
 - replace: true
 
 brews:
-- name: azureprice
+- name: cloudcost
   homepage: "https://github.com/muandane/homebrew-gitmoji"
   tap:
     owner: muandane
