@@ -1,3 +1,6 @@
+/*
+Cloud costs version
+*/
 package cmd
 
 import (
@@ -13,6 +16,6 @@ var versionCmd = &cobra.Command{
 	Long: `The version command provides information about the application's version.
 Use this command to check the current version of the application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Azureprice CLI version 0.0.1")
+		fmt.Println("Cloudcost CLI version 0.0.1")
 	},
 }

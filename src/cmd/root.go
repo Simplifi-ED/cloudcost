@@ -1,3 +1,6 @@
+/*
+Root CMD for Cloud Costs CLI
+*/
 package cmd
 
 import (

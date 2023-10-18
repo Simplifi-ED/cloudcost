@@ -1,11 +1,18 @@
 /*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
+Azure Cloud Costs CMD
 */
 package cmd
 
 import (
+	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 )
+
+type Colors struct {
+	Spot   lipgloss.AdaptiveColor
+	Normal lipgloss.AdaptiveColor
+	Low    lipgloss.AdaptiveColor
+}
 
 var vmType string
 var region string
@@ -14,6 +21,11 @@ var pricingType string
 var currency string
 var period int
 var bandwidth float64
+var typeColors = Colors{
+	Spot:   lipgloss.AdaptiveColor{Light: "#D83F31", Dark: "#D83F31"},
+	Normal: lipgloss.AdaptiveColor{Light: "#116D6E", Dark: "#00DFA2"},
+	Low:    lipgloss.AdaptiveColor{Light: "#EE9322", Dark: "#E9B824"},
+}
 
 // azureCmd represents the azure command
 var azureCmd = &cobra.Command{

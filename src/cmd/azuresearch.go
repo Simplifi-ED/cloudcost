@@ -1,3 +1,6 @@
+/*
+Azure Price Search CMD
+*/
 package cmd
 
 import (
@@ -16,7 +19,7 @@ func init() {
 	searchCmd.Flags().StringVarP(&vmType, "type", "t", "", "VM type")
 	searchCmd.Flags().StringVarP(&region, "region", "r", "", "Region")
 	searchCmd.Flags().StringVarP(&service, "service", "s", "", "Azure service (e.g., 'D' for D series vms, Private for Private links)")
-	searchCmd.Flags().StringVarP(&pricingType, "pricing-type", "p", "", "Pricing Type (e.g., 'Consumption' or 'Reservation')")
+	searchCmd.Flags().StringVarP(&pricingType, "pricing-type", "p", "Consumption", "Pricing Type (e.g., 'Consumption' or 'Reservation')")
 	searchCmd.Flags().StringVarP(&currency, "currency", "c", "", "Price Currency (e.g., 'USD' or 'EUR')")
 }
 
@@ -30,11 +33,6 @@ as an argument to this command.`,
 		re := lipgloss.NewRenderer(os.Stdout)
 		baseStyle := re.NewStyle().Padding(0, 1)
 		headerStyle := baseStyle.Copy().Foreground(lipgloss.AdaptiveColor{Light: "#186F65", Dark: "#1AACAC"}).Bold(true)
-		typeColors := map[string]lipgloss.AdaptiveColor{
-			"Spot":   lipgloss.AdaptiveColor{Light: "#D83F31", Dark: "#D83F31"},
-			"Normal": lipgloss.AdaptiveColor{Light: "#116D6E", Dark: "#00DFA2"},
-			"Low":    lipgloss.AdaptiveColor{Light: "#EE9322", Dark: "#E9B824"},
-		}
 
 		tableData := [][]string{{"SKU", "Retail Price", "Unit of Measure", "Monthly Price", "Region", "Meter", "Product Name"}}
 		apiURL := "https://prices.azure.com/api/retail/prices?"
@@ -77,7 +75,7 @@ as an argument to this command.`,
 			BorderStyle(re.NewStyle().Foreground(lipgloss.AdaptiveColor{Light: "#186F65", Dark: "#1AACAC"})).
 			Headers(CapitalizeHeaders(headers)...).
 			Width(120).
-			Rows(tableData[2:]...). // Pass only the rows to the Rows function
+			Rows(tableData[1:]...). // Pass only the rows to the Rows function
 			StyleFunc(func(row, col int) lipgloss.Style {
 				if row == 0 {
 					return headerStyle
@@ -87,11 +85,11 @@ as an argument to this command.`,
 					meter := tableData[row-0][4]                                       // The "Meter" column is the 5th column (index 4)
 					color := lipgloss.AdaptiveColor{Light: "#186F65", Dark: "#1AACAC"} // Default color
 					if strings.Contains(meter, "Spot") {
-						color = typeColors["Spot"]
+						color = typeColors.Spot
 					} else if strings.Contains(meter, "Low") {
-						color = typeColors["Low"]
+						color = typeColors.Low
 					} else {
-						color = typeColors["Normal"]
+						color = typeColors.Normal
 					}
 					return baseStyle.Copy().Foreground(color)
 				}

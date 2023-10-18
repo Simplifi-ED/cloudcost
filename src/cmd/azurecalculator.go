@@ -1,5 +1,5 @@
 /*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
+Azure Price Calculator CMD
 */
 package cmd
 
@@ -25,11 +25,7 @@ You can specify the resource name and additional parameters to get accurate pric
 		re := lipgloss.NewRenderer(os.Stdout)
 		baseStyle := re.NewStyle().Padding(0, 1)
 		headerStyle := baseStyle.Copy().Foreground(lipgloss.AdaptiveColor{Light: "#186F65", Dark: "#1AACAC"}).Bold(true)
-		typeColors := map[string]lipgloss.AdaptiveColor{
-			"Spot":   lipgloss.AdaptiveColor{Light: "#D83F31", Dark: "#D83F31"},
-			"Normal": lipgloss.AdaptiveColor{Light: "#116D6E", Dark: "#00DFA2"},
-			"Low":    lipgloss.AdaptiveColor{Light: "#EE9322", Dark: "#E9B824"},
-		}
+
 		tableData := [][]string{{"SKU", "Retail Price", "Unit of Measure", "Monthly Price", "Usage", "Region", "Product Name"}}
 		apiURL := "https://prices.azure.com/api/retail/prices?"
 		currencyType := fmt.Sprintf("currencyCode='%s'", currency)
@@ -87,11 +83,11 @@ You can specify the resource name and additional parameters to get accurate pric
 					meter := tableData[row-0][4]                                       // The "Meter" column is the 5th column (index 4)
 					color := lipgloss.AdaptiveColor{Light: "#186F65", Dark: "#1AACAC"} // Default color
 					if strings.Contains(meter, "Spot") {
-						color = typeColors["Spot"]
+						color = typeColors.Spot
 					} else if strings.Contains(meter, "Low") {
-						color = typeColors["Low"]
+						color = typeColors.Low
 					} else {
-						color = typeColors["Normal"]
+						color = typeColors.Normal
 					}
 					return baseStyle.Copy().Foreground(color)
 				}
@@ -105,10 +101,10 @@ func init() {
 	calculatorCmd.Flags().StringVarP(&vmType, "type", "t", "", "VM type")
 	calculatorCmd.Flags().StringVarP(&region, "region", "r", "", "Region")
 	calculatorCmd.Flags().StringVarP(&service, "service", "s", "", "Azure service (e.g., 'D' for D series vms, Private for Private links)")
-	calculatorCmd.Flags().StringVarP(&pricingType, "pricing-type", "p", "", "Pricing Type (e.g., 'Consumption' or 'Reservation')")
+	calculatorCmd.Flags().StringVarP(&pricingType, "pricing-type", "p", "Consumption", "Pricing Type (e.g., 'Consumption' or 'Reservation')")
 	calculatorCmd.Flags().StringVarP(&currency, "currency", "c", "", "Price Currency (e.g., 'USD' or 'EUR')")
 	calculatorCmd.Flags().Float64VarP(&bandwidth, "bandwidth", "b", 1, "Pricing Type (e.g., 'Consumption' or 'Reservation')")
-	calculatorCmd.Flags().IntVarP(&period, "days", "d", 1, "Price Currency (e.g., 'USD' or 'EUR')")
+	calculatorCmd.Flags().IntVarP(&period, "days", "d", 1, "period (e.g., '1' for 1 day, '7' for 7 days)")
 }
 
 func calculateUsageGB(bandwidth float64, days int, usagePerGB float64) float64 {
