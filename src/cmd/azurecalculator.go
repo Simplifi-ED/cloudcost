@@ -15,19 +15,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var period int
-var bandwidth float64
-
 // calculatorCmd represents the calculator command
 var calculatorCmd = &cobra.Command{
 	Use:   "calculator",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Calculate Azure resource pricing based on parameters.",
+	Long: `Use the azure calculator subcommand to calculate the pricing of an Azure resource.
+You can specify the resource name and additional parameters to get accurate pricing details.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		re := lipgloss.NewRenderer(os.Stdout)
 		baseStyle := re.NewStyle().Padding(0, 1)
@@ -109,23 +102,13 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	rootCmd.AddCommand(calculatorCmd)
 	calculatorCmd.Flags().StringVarP(&vmType, "type", "t", "", "VM type")
-	calculatorCmd.Flags().StringVarP(&region, "region", "r", "westus", "Region")
+	calculatorCmd.Flags().StringVarP(&region, "region", "r", "", "Region")
 	calculatorCmd.Flags().StringVarP(&service, "service", "s", "", "Azure service (e.g., 'D' for D series vms, Private for Private links)")
-	calculatorCmd.Flags().StringVarP(&pricingType, "pricing-type", "p", "Consumption", "Pricing Type (e.g., 'Consumption' or 'Reservation')")
-	calculatorCmd.Flags().StringVarP(&currency, "currency", "c", "USD", "Price Currency (e.g., 'USD' or 'EUR')")
+	calculatorCmd.Flags().StringVarP(&pricingType, "pricing-type", "p", "", "Pricing Type (e.g., 'Consumption' or 'Reservation')")
+	calculatorCmd.Flags().StringVarP(&currency, "currency", "c", "", "Price Currency (e.g., 'USD' or 'EUR')")
 	calculatorCmd.Flags().Float64VarP(&bandwidth, "bandwidth", "b", 1, "Pricing Type (e.g., 'Consumption' or 'Reservation')")
 	calculatorCmd.Flags().IntVarP(&period, "days", "d", 1, "Price Currency (e.g., 'USD' or 'EUR')")
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// calculatorCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// calculatorCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 func calculateUsageGB(bandwidth float64, days int, usagePerGB float64) float64 {
