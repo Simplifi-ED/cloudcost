@@ -1,51 +1,50 @@
-Output demo.gif
+Output demo-light.gif
 Set Shell zsh
-# Set up a 1200x600 terminal with 46px font.
-Set FontSize 14
-Set Width 1000
+Set Theme "Catppuccin Latte"
+# Set up a 1200x600 terminal with 13px font.
+Set FontSize 13
+Set Width 1200
 Set Height 600
 
 Sleep 500ms
 Sleep 500ms
-Type "azureprice"
+Type "cloudcost"
 Type " "
 Sleep 50ms
-Type "-t "
+Type "azure search"
 Sleep 90ms
-Type "S"
+Type " --type"
 Sleep 50ms
-Type "tandard"
+Type " NV6 "
 Sleep 1s
-Type "_"
+Type "--region"
 Sleep 50ms
-Type "P"
+Type " francecentral"
 Sleep 50ms
-Type "B"
+Type " --currency"
 Sleep 50ms
-Type "6"
+Type " EUR"
 Sleep 50ms
-Type "s -r "
 Sleep 500ms
-Type "eastus"
 Enter
 Sleep 500ms
 Sleep 1s
 Sleep 500ms
-Type "azureprice"
+Type "cloudcost"
 Type " "
 Sleep 50ms
-Type "-s "
+Type "azure calculator"
 Sleep 90ms
-Type "B"
+Type " --service 'Virtual Network'"
+Sleep 20ms
+Type " "
 Sleep 50ms
-Type "4"
-Sleep 50ms
-Type "p"
+Type "--region francecentral"
 Sleep 50ms
 Sleep 50ms
-Type " -r"
+Type " --currency EUR --days 40"
 Sleep 500ms
-Type " australiaeast"
+Type " -b 500"
 Enter
 Sleep 500ms
 Sleep 2s
