@@ -4,8 +4,13 @@
 
 cloudcost is a Go CLI that retrieves pricing information for Azure services using the Azure pricing API.
 
-![Cloud cost Demo dark themed terminal](./demo-dark.gif)
-![Cloud cost Demo light themeed terminal](./demo-light.gif)
+|Dark Theme|Light Theme|
+|---|---|
+|![Cloud cost Demo dark themed terminal](./demo-dark.gif)|![Cloud cost Demo light themeed terminal](./demo-light.gif)|
+
+
+
+
 
 ## Features
 
