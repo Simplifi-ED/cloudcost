@@ -1,7 +1,4 @@
-/*
-Azure Price Search CMD
-*/
-package cmd
+package cmd //Azure Price Search CMD
 
 import (
 	"fmt"

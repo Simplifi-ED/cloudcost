@@ -1,7 +1,4 @@
-/*
-Azure Price Calculator CMD
-*/
-package cmd
+package cmd //Azure Price Calculator CMD
 
 import (
 	"fmt"
@@ -107,7 +104,7 @@ func init() {
 	calculatorCmd.Flags().StringVarP(&currency, "currency", "c", "", "Price Currency (e.g., 'USD' or 'EUR')")
 	calculatorCmd.Flags().Float64VarP(&bandwidth, "bandwidth", "b", 1, "Pricing Type (e.g., 'Consumption' or 'Reservation')")
 	calculatorCmd.Flags().IntVarP(&period, "days", "d", 1, "period (e.g., '1' for 1 day, '7' for 7 days)")
-	calculatorCmd.Flags().Float64VarP(&eventCount, "events", "e", 1, "Number of events")
+	calculatorCmd.Flags().Float64VarP(&eventCount, "events", "e", 1, "Number of events (default is 1 for 1 Million events)")
 }
 
 func calculateUsageGB(bandwidth float64, days int, usagePerGB float64) float64 {
