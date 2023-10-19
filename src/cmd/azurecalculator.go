@@ -46,10 +46,12 @@ You can specify the resource name and additional parameters to get accurate pric
 					usage = calculateUsageHourly(bandwidth, period, item.RetailPrice) // Assuming a bandwidth of 1 GB/day and
 				} else if strings.Contains(item.UnitOfMeasure, "Month") {
 					usage = calculateUsageMonthly(bandwidth, period, item.RetailPrice) // Assuming a bandwidth of 1 GB/day and
+				} else if strings.Contains(item.UnitOfMeasure, "M") {
+					usage = calculateUsageEvents(eventCount, item.RetailPrice)
 				}
 
 				var monthlyPrice string
-				if pricingType != "Reservation" && !strings.Contains(item.UnitOfMeasure, "GB") && !strings.Contains(item.UnitOfMeasure, "Month") {
+				if pricingType != "Reservation" && !strings.Contains(item.UnitOfMeasure, "GB") && !strings.Contains(item.UnitOfMeasure, "Month") && !strings.Contains(item.UnitOfMeasure, "M") && !strings.Contains(item.UnitOfMeasure, "K") {
 					monthlyPrice = fmt.Sprintf("%v", item.RetailPrice*730) // Calculate the monthly price
 				} else {
 					monthlyPrice = "---"
@@ -61,7 +63,7 @@ You can specify the resource name and additional parameters to get accurate pric
 			}
 			apiURL = resp.NextPageLink
 		}
-		headers := []string{"SKU", "Retail Price", "Unit of Measure", "Monthly Price", "Usage", "Region", "Product Name"}
+		headers := []string{"SKU", "Retail Price", "Unit of Measure", "Monthly Price", "Usage", "Region", "Meter Name", "Product Name"}
 		CapitalizeHeaders := func(tableData []string) []string {
 			for i := range tableData {
 				tableData[i] = strings.ToUpper(tableData[i])
@@ -105,10 +107,15 @@ func init() {
 	calculatorCmd.Flags().StringVarP(&currency, "currency", "c", "", "Price Currency (e.g., 'USD' or 'EUR')")
 	calculatorCmd.Flags().Float64VarP(&bandwidth, "bandwidth", "b", 1, "Pricing Type (e.g., 'Consumption' or 'Reservation')")
 	calculatorCmd.Flags().IntVarP(&period, "days", "d", 1, "period (e.g., '1' for 1 day, '7' for 7 days)")
+	calculatorCmd.Flags().Float64VarP(&eventCount, "events", "e", 1, "Number of events")
 }
 
 func calculateUsageGB(bandwidth float64, days int, usagePerGB float64) float64 {
 	totalUsage := bandwidth * float64(days) * usagePerGB
+	return totalUsage
+}
+func calculateUsageEvents(eventCount float64, usagePerEvent float64) float64 {
+	totalUsage := eventCount * usagePerEvent
 	return totalUsage
 }
 func calculateUsageHourly(period float64, days int, usagePerHour float64) float64 {

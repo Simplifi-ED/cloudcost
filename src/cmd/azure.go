@@ -21,6 +21,7 @@ var pricingType string
 var currency string
 var period int
 var bandwidth float64
+var eventCount float64
 var typeColors = Colors{
 	Spot:   lipgloss.AdaptiveColor{Light: "#D83F31", Dark: "#D83F31"},
 	Normal: lipgloss.AdaptiveColor{Light: "#116D6E", Dark: "#00DFA2"},
