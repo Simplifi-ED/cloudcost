@@ -30,8 +30,8 @@ archives:
     group: root
     owner: root
   files:
-  - ../README.md
-  - ../LICENSE
+  - README.md
+  - LICENSE
   - completions/*
 
 brews:
