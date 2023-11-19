@@ -1,4 +1,4 @@
-module github.com/muandane/azureprice
+module github.com/muandane/cloudcost
 
 go 1.21.3
 

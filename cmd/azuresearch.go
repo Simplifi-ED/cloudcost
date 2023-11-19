@@ -8,7 +8,7 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
-	"github.com/muandane/azureprice/utils"
+	"github.com/muandane/cloudcost/utils"
 	"github.com/spf13/cobra"
 )
 

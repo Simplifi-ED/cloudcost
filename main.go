@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/muandane/azureprice/cmd"
+	"github.com/muandane/cloudcost/cmd"
 )
 
 func main() {
