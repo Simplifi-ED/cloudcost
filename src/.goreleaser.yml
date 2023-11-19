@@ -1,3 +1,6 @@
+before:
+  hooks:
+  - ./scripts/completions.sh
 builds:
 - binary: cloudcost
   main: ./
@@ -17,16 +20,35 @@ release:
 
 universal_binaries:
 - replace: true
+archives:
+- name_template: >-
+    {{- .ProjectName }}_ {{- .Version }}_ {{- title .Os }}_ {{- if eq .Arch "amd64" }}x86_64 {{- else if eq .Arch "386" }}i386 {{- else }}{{ .Arch }}{{ end }} {{- if .Arm }}v{{ .Arm }}{{ end -}}
+  format_overrides:
+  - goos: windows
+    format: zip
+  builds_info:
+    group: root
+    owner: root
+  files:
+  - README.md
+  - LICENSE
+  - completions/*
 
 brews:
 - name: cloudcost
-  homepage: "https://github.com/muandane/homebrew-gitmoji"
-  tap:
+  homepage: "https://github.com/muandane/homebrew-tap"
+  repository:
     owner: muandane
-    name: homebrew-gitmoji
+    name: homebrew-tap
+  folder: Formula
   commit_author:
     name: muandane
     email: zmoualhi@outlook.com
+  extra_install: |-
+    bash_completion.install "completions/goji.bash" => "goji"
+    zsh_completion.install "completions/goji.zsh" => "_goji"
+    fish_completion.install "completions/goji.fish"
+
 
 checksum:
   name_template: 'checksums.txt'

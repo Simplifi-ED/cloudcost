@@ -8,10 +8,6 @@ cloudcost is a Go CLI that retrieves pricing information for Azure services usin
 |---|---|
 |![Cloud cost Demo dark themed terminal](./demo-dark.gif)|![Cloud cost Demo light themeed terminal](./demo-light.gif)|
 
-
-
-
-
 ## Features
 
 - Retrieves pricing info for Azure services
@@ -22,8 +18,7 @@ cloudcost is a Go CLI that retrieves pricing information for Azure services usin
 ## Installation
 
 ```sh
-brew tap muandane/gitmoji
-brew install cloudcost
+brew install muandane/tap/cloudcost
 ```
 
 Or build from source:

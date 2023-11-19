@@ -1,7 +1,4 @@
-/*
-Azure Price Search CMD
-*/
-package cmd
+package cmd //Azure Price Search CMD
 
 import (
 	"fmt"
@@ -49,7 +46,7 @@ as an argument to this command.`,
 
 			for _, item := range resp.Items {
 				var monthlyPrice string
-				if pricingType != "Reservation" && !strings.Contains(item.UnitOfMeasure, "GB") && !strings.Contains(item.UnitOfMeasure, "Month") {
+				if pricingType != "Reservation" && !strings.Contains(item.UnitOfMeasure, "GB") && !strings.Contains(item.UnitOfMeasure, "Month") && !strings.Contains(item.UnitOfMeasure, "M") && !strings.Contains(item.UnitOfMeasure, "K") {
 					monthlyPrice = fmt.Sprintf("%v", item.RetailPrice*730) // Calculate the monthly price
 				} else {
 					monthlyPrice = "---"
