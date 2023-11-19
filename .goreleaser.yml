@@ -45,9 +45,9 @@ brews:
     name: muandane
     email: zmoualhi@outlook.com
   extra_install: |-
-    bash_completion.install "completions/goji.bash" => "goji"
-    zsh_completion.install "completions/goji.zsh" => "_goji"
-    fish_completion.install "completions/goji.fish"
+    bash_completion.install "completions/cloudcost.bash" => "cloudcost"
+    zsh_completion.install "completions/cloudcost.zsh" => "_cloudcost"
+    fish_completion.install "completions/cloudcost.fish"
 
 
 checksum:
