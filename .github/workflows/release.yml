@@ -32,3 +32,14 @@ jobs:
           workdir: src
         env:
           GITHUB_TOKEN: ${{ secrets.PUBLISHER_TOKEN }}
+  homebrew:
+    name: Bump Homebrew formula
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mislav/bump-homebrew-formula-action@v3
+        with:
+          formula-name: cloudcost
+          formula-path: Formula/cloudcost.rb
+          homebrew-tap: muandane/homebrew-tap
+        env:
+          COMMITTER_TOKEN:  ${{ secrets.COMMITTER_TOKEN }}
